@@ -1,0 +1,43 @@
+.selectionBox {
+    width: 100%;
+    display: block;
+    margin-bottom: 10%;
+}
+
+.colorSelectorLeft {
+    display: inline-block;
+}
+
+.colorSelectorRight {
+    /*
+    margin-left: auto;
+    margin-right: 0;
+    display: inline-block;
+    */
+    float: right;
+}
+
+.speedSelector {
+    width: 50%;
+    margin: auto;
+}
+
+.submit {
+    margin: auto;
+}
+
+p {
+    text-align: center;
+}
+
+.title {
+    font-size: 30px;
+}
+
+.selectionBox div, p {
+    font-size: 15px;
+}
+
+.colorSelector {
+    
+}

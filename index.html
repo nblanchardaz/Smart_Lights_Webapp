@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="script.js"></script>
+
+</head>
+<body>
+
+  <div class="tile">
+    <button id="connectBleButton">Connect</button>
+    <button id="disconnectBleButton">Disconnect</button>
+    <p>BLE state: <strong><span id="bleState" style="color:#d13a30;">Disconnected</span></strong></p>
+  </div>
+
+  <div class="tile">
+    <div class="selectionBox" id="primary">
+
+      <p class="title">Primary</p>
+      <form onSubmit="updateFields(event, 'primary')">
+
+        <div class="colorSelectorLeft">
+          <label for="starting">Starting Color</label>
+          <input type="color" class="colorSelector" name="starting" value="#ff0000">
+        </div>
+
+        <div class="colorSelectorRight">
+          <label for="ending">Ending Color</label>
+          <input type="color" class="colorSelector" name="ending" value="#ff0000">
+        </div>
+
+        <p class="subtitle">Speed
+          <input type="range" class="speedSelector" min="1" max="100" value="50">
+        </p>
+
+        <p><input type="submit" value="Submit" class="submit"></p>
+
+      </form>
+    </div>
+
+
+    <div class="selectionBox" id="secondary">
+
+      <p class="title">Secondary</p>
+      <form onSubmit="updateFields(event, 'secondary')">
+
+        <div class="colorSelectorLeft">
+          <label for="starting">Starting Color</label>
+          <input type="color" class="colorSelector" name="starting" value="#ff0000">
+        </div>
+
+        <div class="colorSelectorRight">
+          <label for="ending">Ending Color</label>
+          <input type="color" class="colorSelector" name="ending" value="#ff0000">
+        </div>
+
+        <p>Speed
+          <input type="range" class="speedSelector" min="1" max="100" value="50">
+        </p>
+
+        <p><input type="submit" value="Submit" class="submit"></p>
+
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
