@@ -2,13 +2,13 @@
 
 // BLE specs
 var deviceName = 'ESP32';
-var bleService = '';
-var primaryColorStartingCharacteristic = '';
-var primaryColorEndingCharacteristic = '';
-var secondaryColorStartingCharacteristic = '';
-var secondaryColorEndingCharacteristic = '';
-var primarySpeedCharacteristic = '';
-var secondarySpeedCharacteristic = '';
+var bleService = 0x04D2;
+var primaryColorStartingCharacteristic = 0x0001;
+var primaryColorEndingCharacteristic = 0x0002;
+var secondaryColorStartingCharacteristic = 0x0004;
+var secondaryColorEndingCharacteristic = 0x0005;
+var primarySpeedCharacteristic = 0x0003;
+var secondarySpeedCharacteristic = 0x0006;
 
 // Global variables
 var bleServer;
@@ -45,7 +45,9 @@ function isWebBluetoothEnabled() {
 function connectToDevice() {
     console.log('Initializing Bluetooth...');
     navigator.bluetooth.requestDevice({
-        filters: [{name: deviceName}],
+        // filters: [{name: deviceName}],
+        // optionalServices: [bleService]
+        acceptAllDevices: true,
         optionalServices: [bleService]
     })
     .then(device => {
