@@ -1,7 +1,7 @@
 // BLE code originally from https://randomnerdtutorials.com/esp32-web-bluetooth/
 
 // BLE specs
-const deviceName = 'ESP32';
+const deviceName = 'LED CONTROLLER';
 const bleService = 0x04D2;
 const primaryColorStartingCharacteristic = '00000001-0000-1000-8000-00805f9b34fb';
 const primaryColorEndingCharacteristic = '00000002-0000-1000-8000-00805f9b34fb';
@@ -10,8 +10,9 @@ const secondaryColorEndingCharacteristic = '00000005-0000-1000-8000-00805f9b34fb
 const primarySpeedCharacteristic = '00000003-0000-1000-8000-00805f9b34fb';
 const secondarySpeedCharacteristic = '00000006-0000-1000-8000-00805f9b34fb';
 const protocolCharacteristic = '00000007-0000-1000-8000-00805f9b34fb';
+const updateFlagCharacteristic = '00000008-0000-1000-8000-00805f9b34fb';
 
-const characteristicList = [primaryColorStartingCharacteristic, primaryColorEndingCharacteristic, primarySpeedCharacteristic, secondaryColorStartingCharacteristic, secondaryColorEndingCharacteristic, secondarySpeedCharacteristic, protocolCharacteristic];
+const characteristicList = [primaryColorStartingCharacteristic, primaryColorEndingCharacteristic, primarySpeedCharacteristic, secondaryColorStartingCharacteristic, secondaryColorEndingCharacteristic, secondarySpeedCharacteristic, protocolCharacteristic, updateFlagCharacteristic];
 var _characteristics = [];
 
 // Global variables
@@ -49,14 +50,15 @@ function isWebBluetoothEnabled() {
 function connectToDevice() {
     console.log('Initializing Bluetooth...');
     navigator.bluetooth.requestDevice({
-        // filters: [{name: deviceName}],
-        // optionalServices: [bleService]
-        acceptAllDevices: true,
+        filters: [{name: deviceName}],
         optionalServices: [bleService]
+        // acceptAllDevices: true,
+        // optionalServices: [bleService]
     })
     .then(device => {
         console.log('Device Selected: ', device.name);
-        bleStateContainer.innerHTML = 'Connected to device ' + device.name;
+        // bleStateContainer.innerHTML = 'Connected to device ' + device.name;
+        bleStateContainer.innerHTML = 'Connected';
         bleStateContainer.style.color = "#24af37";
         device.addEventListener('gattservicedisconnected', onDisconnected);
         return device.gatt.connect();
@@ -70,25 +72,12 @@ function connectToDevice() {
         bleServiceFound = service;
         console.log("Service discoverd:", service.uuid);
         
-        // characteristicList.forEach(function(sensorCharacteristic, index) {
-        //     // var temp = await service.getCharacteristic(sensorCharacteristic);
-        //     var temp = service.getCharacteristic(sensorCharacteristic);
-        //     _characteristics.push(temp);
-        // })
         for (let i = 0; i < characteristicList.length; i++) {
             var temp = await service.getCharacteristic(characteristicList[i]);
              _characteristics.push(temp);
         }
         return _characteristics;
     })
-    // .then(characteristic => {
-    //     console.log("Characteristic discovered:", characteristic.uuid);
-    //     sensorCharacteristicFound = characteristic;
-    //     characteristic.addEventListener('characteristicvaluechanged', handleCharacteristicChange);
-    //     characteristic.startNotifications();
-    //     console.log("Notifications Started.");
-    //     return characteristic.readValue();
-    // })
     .then(_characteristics => {
         for (let i = 0; i < _characteristics.length; i++) {
             var characteristic = _characteristics[i];
@@ -174,17 +163,60 @@ function writeOnCharacteristic(_characteristic, value){
             const data = new Uint8Array([value]);
             return characteristic.writeValue(data);
         })
-        .then(() => {
-            latestValueSent.innerHTML = value;
-            console.log("Value written to characteristic:", value);
-        })
+        // .then(() => {
+        //     latestValueSent.innerHTML = value;
+        //     console.log("Value written to characteristic:", value);
+        // })
         .catch(error => {
             console.error("Error writing to the characteristic: ", error);
         });
     } else {
         console.error ("Bluetooth is not connected. Cannot write to characteristic.")
-        window.alert("Bluetooth is not connected. Cannot write to characteristic. \n Connect to BLE first!")
+        // window.alert("Bluetooth is not connected.\nConnect to device first!")
     }
+}
+
+function writeArrayOnCharacteristic(_characteristic, arr){
+    if (bleServer && bleServer.connected) {
+        bleServiceFound.getCharacteristic(_characteristic)
+        .then(characteristic => {
+            console.log("Found the characteristic: ", characteristic.uuid);
+            return characteristic.writeValue(arr);
+        })
+        // .then(() => {
+        //     latestValueSent.innerHTML = value;
+        //     console.log("Value written to characteristic:", value);
+        // })
+        .catch(error => {
+            console.error("Error writing to the characteristic: ", error);
+        });
+    } else {
+        console.error ("Bluetooth is not connected. Cannot write to characteristic.")
+        // window.alert("Bluetooth is not connected.\nConnect to device first!")
+    }
+}
+
+function hexToByteArray(hex) {
+
+    // First, remove '#'
+    hex = hex.slice(1);
+
+    // Next, get red, green, and blue values
+    let red = parseInt(hex.slice(0, 2), 16);
+    let green = parseInt(hex.slice(2, 4), 16);
+    let blue = parseInt(hex.slice(4), 16);
+
+    // Re-create our number by splicing the three bytes together
+    let buffer = new Uint8Array(3);
+    buffer[0] = red;
+    buffer[1] = green;
+    buffer[2] = blue;
+
+    // // Turns out we didn't really need an array... because we have to join the three values anyways. But I'll leave it here because it could be useful if I find a better method in the future.
+    // let final = (buffer[0] << 16) | (buffer[1] << 8) | buffer[2];
+    
+    // return final;
+    return buffer;
 }
 
 // Send data over BLE when the form is updated
@@ -196,20 +228,26 @@ function updateFields(event, param) {
     let endingColor = source.querySelector('input[name="ending"').value
     let speed = source.querySelector('input.speedSelector').value
 
+    let startingColorTranslated = hexToByteArray(startingColor);
+    let endingColorTranslated = hexToByteArray(endingColor);
+
     // Debug
-    window.alert(param + ', ' + startingColor + ", " + endingColor + ', ' + speed)
+    // window.alert(param + ', ' + startingColorTranslated + ", " + endingColorTranslated + ', ' + speed)
 
     // Send over BLE
     if (param == "primary") {
-        writeOnCharacteristic(primaryColorStartingCharacteristic, startingColor);
-        writeOnCharacteristic(primaryColorEndingCharacteristic, endingColor);
+        writeArrayOnCharacteristic(primaryColorStartingCharacteristic, startingColorTranslated);
+        writeArrayOnCharacteristic(primaryColorEndingCharacteristic, endingColorTranslated);
         writeOnCharacteristic(primarySpeedCharacteristic, speed);
     }
     else {
-        writeOnCharacteristic(secondaryColorStartingCharacteristic, startingColor);
-        writeOnCharacteristic(secondaryColorEndingCharacteristic, endingColor);
+        writeArrayOnCharacteristic(secondaryColorStartingCharacteristic, startingColorTranslated);
+        writeArrayOnCharacteristic(secondaryColorEndingCharacteristic, endingColorTranslated);
         writeOnCharacteristic(secondarySpeedCharacteristic, speed);
     }
+
+    // Update flag
+    writeOnCharacteristic(updateFlagCharacteristic, 1);
 
     // Prevent form from being cleared
     event.preventDefault();

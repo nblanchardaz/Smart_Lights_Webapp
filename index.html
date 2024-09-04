@@ -5,12 +5,14 @@
     <script type="text/javascript" src="script.js"></script>
 
 </head>
-<body>
+<body style="background-image: url('stars.gif');">
 
   <div class="tile">
-    <button id="connectBleButton">Connect</button>
-    <button id="disconnectBleButton">Disconnect</button>
-    <p>BLE state: <strong><span id="bleStateContainer" style="color:#d13a30;">Disconnected</span></strong></p>
+    <div class="connection">
+      <button id="connectBleButton">Connect</button>
+      <button id="disconnectBleButton">Disconnect</button>
+      <p>BLE: <strong><span id="bleStateContainer" style="color:#d13a30;">Disconnected</span></strong></p>
+    </div>
   </div>
 
   <div class="tile">
@@ -29,16 +31,18 @@
           <input type="color" class="colorSelector" name="ending" value="#ff0000">
         </div>
 
-        <p class="subtitle">Speed
+        <p class="subtitle">Speed</p>
+        <div class="speedSelectorBox">
           <input type="range" class="speedSelector" min="1" max="100" value="50">
-        </p>
+        </div>
 
         <p><input type="submit" value="Submit" class="submit"></p>
 
       </form>
     </div>
+  </div>
 
-
+  <div class="tile">
     <div class="selectionBox" id="secondary">
 
       <p class="title">Secondary</p>
@@ -54,9 +58,10 @@
           <input type="color" class="colorSelector" name="ending" value="#ff0000">
         </div>
 
-        <p>Speed
+        <p class="subtitle">Speed</p>
+        <div class="speedSelectorBox">
           <input type="range" class="speedSelector" min="1" max="100" value="50">
-        </p>
+        </div>
 
         <p><input type="submit" value="Submit" class="submit"></p>
 

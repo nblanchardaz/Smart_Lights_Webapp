@@ -1,11 +1,13 @@
 .selectionBox {
     width: 100%;
     display: block;
-    margin-bottom: 10%;
+    margin-bottom: 0%;
 }
 
 .colorSelectorLeft {
     display: inline-block;
+    color: white;
+    margin-left: 15%;
 }
 
 .colorSelectorRight {
@@ -15,6 +17,8 @@
     display: inline-block;
     */
     float: right;
+    color: white;
+    margin-right: 15%;
 }
 
 .speedSelector {
@@ -22,8 +26,17 @@
     margin: auto;
 }
 
+.subtitle {
+    color: white;
+}
+
+.speedSelectorBox {
+    text-align: center;
+}
+
 .submit {
     margin: auto;
+    font-size: 20px;
 }
 
 p {
@@ -35,9 +48,38 @@ p {
 }
 
 .selectionBox div, p {
-    font-size: 15px;
+    font-size: 25px;
+}
+
+.selectionBox .title {
+    color: white;
 }
 
 .colorSelector {
     
+}
+
+.connection {
+    width: 100%;
+    text-align: center;
+    color: white;
+}
+
+.connection button {
+    display: inline-block;
+    margin: 5%;
+    font-size: 20px;
+}
+
+.connection p {
+    font-size: 25px;
+    margin-top: 0px;
+}
+
+.tile {
+    border: 6px solid white;
+    background: rgba(0, 0, 0, .6);
+    margin-top: 2.5%;
+    padding-left: 5%;
+    padding-right: 5%;
 }
