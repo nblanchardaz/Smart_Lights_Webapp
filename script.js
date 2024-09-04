@@ -1,14 +1,18 @@
 // BLE code originally from https://randomnerdtutorials.com/esp32-web-bluetooth/
 
 // BLE specs
-var deviceName = 'ESP32';
-var bleService = 0x04D2;
-var primaryColorStartingCharacteristic = 0x0001;
-var primaryColorEndingCharacteristic = 0x0002;
-var secondaryColorStartingCharacteristic = 0x0004;
-var secondaryColorEndingCharacteristic = 0x0005;
-var primarySpeedCharacteristic = 0x0003;
-var secondarySpeedCharacteristic = 0x0006;
+const deviceName = 'ESP32';
+const bleService = 0x04D2;
+const primaryColorStartingCharacteristic = '00000001-0000-1000-8000-00805f9b34fb';
+const primaryColorEndingCharacteristic = '00000002-0000-1000-8000-00805f9b34fb';
+const secondaryColorStartingCharacteristic = '00000004-0000-1000-8000-00805f9b34fb';
+const secondaryColorEndingCharacteristic = '00000005-0000-1000-8000-00805f9b34fb';
+const primarySpeedCharacteristic = '00000003-0000-1000-8000-00805f9b34fb';
+const secondarySpeedCharacteristic = '00000006-0000-1000-8000-00805f9b34fb';
+const protocolCharacteristic = '00000007-0000-1000-8000-00805f9b34fb';
+
+const characteristicList = [primaryColorStartingCharacteristic, primaryColorEndingCharacteristic, primarySpeedCharacteristic, secondaryColorStartingCharacteristic, secondaryColorEndingCharacteristic, secondarySpeedCharacteristic, protocolCharacteristic];
+var _characteristics = [];
 
 // Global variables
 var bleServer;
@@ -52,7 +56,7 @@ function connectToDevice() {
     })
     .then(device => {
         console.log('Device Selected: ', device.name);
-        bleStateContainer.innerHTML = 'Connected to device' + device.name;
+        bleStateContainer.innerHTML = 'Connected to device ' + device.name;
         bleStateContainer.style.color = "#24af37";
         device.addEventListener('gattservicedisconnected', onDisconnected);
         return device.gatt.connect();
@@ -62,25 +66,45 @@ function connectToDevice() {
         console.log("Connected to GATT Server");
         return bleServer.getPrimaryService(bleService);
     })
-    .then(service => {
+    .then(async service => {
         bleServiceFound = service;
         console.log("Service discoverd:", service.uuid);
-        return service.getCharacteristic(sensorCharacteristic);
+        
+        // characteristicList.forEach(function(sensorCharacteristic, index) {
+        //     // var temp = await service.getCharacteristic(sensorCharacteristic);
+        //     var temp = service.getCharacteristic(sensorCharacteristic);
+        //     _characteristics.push(temp);
+        // })
+        for (let i = 0; i < characteristicList.length; i++) {
+            var temp = await service.getCharacteristic(characteristicList[i]);
+             _characteristics.push(temp);
+        }
+        return _characteristics;
     })
-    .then(characteristic => {
-        console.log("Characteristic discovered:", characteristic.uuid);
-        characteristicFound = characteristic;
-        characteristic.addEventListener('characteristicvaluechanged', handleCharacteristicChange);
-        characteristic.startNotifications();
-        console.log("Notifications Started.");
-        return characteristic.readValue();
+    // .then(characteristic => {
+    //     console.log("Characteristic discovered:", characteristic.uuid);
+    //     sensorCharacteristicFound = characteristic;
+    //     characteristic.addEventListener('characteristicvaluechanged', handleCharacteristicChange);
+    //     characteristic.startNotifications();
+    //     console.log("Notifications Started.");
+    //     return characteristic.readValue();
+    // })
+    .then(_characteristics => {
+        for (let i = 0; i < _characteristics.length; i++) {
+            var characteristic = _characteristics[i];
+            console.log("Characteristic discovered:", characteristic.uuid);
+            characteristicFound = characteristic;
+            characteristic.addEventListener('characteristicvaluechanged', handleCharacteristicChange);
+            characteristic.startNotifications();
+            console.log("Notifications Started.");
+        }
     })
-    .then(value => {
-        console.log("Read value: ", value);
-        const decodedValue = new TextDecoder().decode(value);
-        console.log("Decoded value: ", decodedValue);
-        retrievedValue.innerHTML = decodedValue;
-    })
+    // // .then(value => {
+    //     console.log("Read value: ", value);
+    //     const decodedValue = new TextDecoder().decode(value);
+    //     console.log("Decoded value: ", decodedValue);
+    //     retrievedValue.innerHTML = decodedValue;
+    // })
     .catch(error => {
         console.log('Error: ', error);
     })
