@@ -13,9 +13,20 @@
       <button id="disconnectBleButton">Disconnect</button>
       <p>BLE: <strong><span id="bleStateContainer" style="color:#d13a30;">Disconnected</span></strong></p>
     </div>
+
+    <div class="dropdownContainer" id="protocol">
+      <form>
+        <label for="protocol">Protocol</label>
+        <select name="protocol" class="protocolSelector" onchange="updateFields(event, 'protocol')">
+            <option value="1">WS2811</option>
+            <option value="0">WS2812x</option>
+        </select>
+      </form>
+    </div>
+
   </div>
 
-  <div class="tile">
+  <div class="tile" style="height: 40%;">
     <div class="selectionBox" id="primary">
 
       <p class="title">Primary</p>
@@ -36,13 +47,18 @@
           <input type="range" class="speedSelector" min="1" max="100" value="50">
         </div>
 
+        <p class="subtitle">Sensitivity</p>
+        <div class="speedSelectorBox">
+          <input type="range" class="sensitivitySelector" min="1" max="100" value="50">
+        </div>
+
         <p><input type="submit" value="Submit" class="submit"></p>
 
       </form>
     </div>
   </div>
 
-  <div class="tile">
+  <div class="tile" style="height: 40%;">
     <div class="selectionBox" id="secondary">
 
       <p class="title">Secondary</p>

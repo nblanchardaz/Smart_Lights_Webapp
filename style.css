@@ -8,6 +8,8 @@
     display: inline-block;
     color: white;
     margin-left: 15%;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .colorSelectorRight {
@@ -19,9 +21,16 @@
     float: right;
     color: white;
     margin-right: 15%;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .speedSelector {
+    width: 50%;
+    margin: auto;
+}
+
+.sensitivitySelector {
     width: 50%;
     margin: auto;
 }
@@ -45,6 +54,7 @@ p {
 
 .title {
     font-size: 30px;
+    margin: 15px;
 }
 
 .selectionBox div, p {
@@ -60,26 +70,45 @@ p {
 }
 
 .connection {
-    width: 100%;
+    width: 80%;
     text-align: center;
     color: white;
+    margin: 0px;
+    display: inline-block;
 }
 
 .connection button {
     display: inline-block;
-    margin: 5%;
+    margin: 20px;
     font-size: 20px;
 }
 
 .connection p {
     font-size: 25px;
     margin-top: 0px;
+    margin-bottom: 10px;
+    padding: 0px;
+}
+
+.dropdownContainer {
+    width: 20%;
+    margin: auto;
+    margin-top: 20px;
+    float: right;
+    font-size: 25px;
+    color: white;
+    text-align: center;
+}
+
+.dropdownContainer select {
+    font-size: 18px;
 }
 
 .tile {
     border: 6px solid white;
     background: rgba(0, 0, 0, .6);
-    margin-top: 2.5%;
-    padding-left: 5%;
-    padding-right: 5%;
+    margin-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    min-width: 640px;
 }

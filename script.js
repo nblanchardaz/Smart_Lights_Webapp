@@ -9,10 +9,12 @@ const secondaryColorStartingCharacteristic = '00000004-0000-1000-8000-00805f9b34
 const secondaryColorEndingCharacteristic = '00000005-0000-1000-8000-00805f9b34fb';
 const primarySpeedCharacteristic = '00000003-0000-1000-8000-00805f9b34fb';
 const secondarySpeedCharacteristic = '00000006-0000-1000-8000-00805f9b34fb';
+const primarySensitivityCharacteristic = '00000009-0000-1000-8000-00805f9b34fb';
 const protocolCharacteristic = '00000007-0000-1000-8000-00805f9b34fb';
 const updateFlagCharacteristic = '00000008-0000-1000-8000-00805f9b34fb';
+const firmwareVersionCharacteristic = '0000000a-0000-1000-8000-00805f9b34fb';
 
-const characteristicList = [primaryColorStartingCharacteristic, primaryColorEndingCharacteristic, primarySpeedCharacteristic, secondaryColorStartingCharacteristic, secondaryColorEndingCharacteristic, secondarySpeedCharacteristic, protocolCharacteristic, updateFlagCharacteristic];
+const characteristicList = [primaryColorStartingCharacteristic, primaryColorEndingCharacteristic, primarySpeedCharacteristic, secondaryColorStartingCharacteristic, secondaryColorEndingCharacteristic, secondarySpeedCharacteristic, protocolCharacteristic, updateFlagCharacteristic, firmwareVersionCharacteristic];
 var _characteristics = [];
 
 // Global variables
@@ -222,25 +224,40 @@ function hexToByteArray(hex) {
 // Send data over BLE when the form is updated
 function updateFields(event, param) {
 
-    // Retrieve new data
     let source = document.getElementById(param)
-    let startingColor = source.querySelector('input[name="starting"').value
-    let endingColor = source.querySelector('input[name="ending"').value
-    let speed = source.querySelector('input.speedSelector').value
 
-    let startingColorTranslated = hexToByteArray(startingColor);
-    let endingColorTranslated = hexToByteArray(endingColor);
+    // // Retrieve new data
+    if (param == "protocol") {
+        // If it's the protocol form, we only need the protocol.
+        let protocol = source.querySelector('select.protocolSelector').value
+        writeOnCharacteristic(protocolCharacteristic, protocol);
+    }
+    else if (param == "primary") {
+        // If it's the primary form, we need color, speed, and sensitity data.
+        let startingColor = source.querySelector('input[name="starting"').value
+        let endingColor = source.querySelector('input[name="ending"').value
+        let speed = source.querySelector('input.speedSelector').value
+        let sensitivity = source.querySelector('input.sensitivitySelector').value
 
-    // Debug
-    // window.alert(param + ', ' + startingColorTranslated + ", " + endingColorTranslated + ', ' + speed)
+        // Translate color values
+        let startingColorTranslated = hexToByteArray(startingColor);
+        let endingColorTranslated = hexToByteArray(endingColor);
 
-    // Send over BLE
-    if (param == "primary") {
         writeArrayOnCharacteristic(primaryColorStartingCharacteristic, startingColorTranslated);
         writeArrayOnCharacteristic(primaryColorEndingCharacteristic, endingColorTranslated);
         writeOnCharacteristic(primarySpeedCharacteristic, speed);
+        writeOnCharacteristic(primarySensitivityCharacteristic, sensitivity);
     }
-    else {
+    else if (param == "secondary") {
+        // If it's the secondary form, we need color and speed data.
+        let startingColor = source.querySelector('input[name="starting"').value
+        let endingColor = source.querySelector('input[name="ending"').value
+        let speed = source.querySelector('input.speedSelector').value
+
+        // Translate color values
+        let startingColorTranslated = hexToByteArray(startingColor);
+        let endingColorTranslated = hexToByteArray(endingColor);
+        
         writeArrayOnCharacteristic(secondaryColorStartingCharacteristic, startingColorTranslated);
         writeArrayOnCharacteristic(secondaryColorEndingCharacteristic, endingColorTranslated);
         writeOnCharacteristic(secondarySpeedCharacteristic, speed);
@@ -252,4 +269,3 @@ function updateFields(event, param) {
     // Prevent form from being cleared
     event.preventDefault();
 }
-
