@@ -59,7 +59,7 @@ p {
 }
 
 .title {
-    font-size: 30px;
+    font-size: 25px;
     margin: 15px;
 }
 
@@ -76,7 +76,7 @@ p {
 }
 
 .connection {
-    width: 70%;
+    width: 40%;
     text-align: center;
     color: white;
     margin: 0px;
@@ -85,7 +85,10 @@ p {
 
 .connection button {
     display: inline-block;
-    margin: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
     font-size: 20px;
 }
 
@@ -96,8 +99,14 @@ p {
     padding: 0px;
 }
 
+.outerDropdownContainer {
+    margin: 0px;
+    float: right;
+    width: 30%;
+}
+
 .dropdownContainer {
-    width: 15%;
+    width: 50%;
     margin: auto;
     margin-top: 20px;
     float: right;
@@ -106,8 +115,18 @@ p {
     text-align: center;
 }
 
+.numLedsContainer {
+    width: 50%;
+    margin: auto;
+    margin-top: 20px;
+    float: left;
+    font-size: 25px;
+    color: white;
+    text-align: center;
+}
+
 .firmwareContainer {
-    width: 15%;
+    width: 30%;
     margin: auto;
     float: left;
     font-size: 15px;
@@ -115,15 +134,36 @@ p {
     text-align: center;
 }
 
+.modeContainer {
+    width: 100%;
+    margin: auto;
+    margin-top: 20px;
+    font-size: 25px;
+    color: white;
+    text-align: center;
+    display: inline-block;
+}
+
 .dropdownContainer select {
     font-size: 18px;
+}
+
+.numLedsContainer select {
+    font-size: 18px;
+}
+
+.modeContainer select {
+    font-size: 18px;
+    margin-bottom: 20px;
 }
 
 .tile {
     border: 6px solid white;
     background: rgba(0, 0, 0, .6);
+    margin: auto;
     margin-top: 10px;
     padding-left: 10px;
     padding-right: 10px;
     min-width: 640px;
+    max-width: 1000px;
 }

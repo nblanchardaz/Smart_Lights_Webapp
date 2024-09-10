@@ -19,16 +19,43 @@
       <p>BLE: <strong><span id="bleStateContainer" style="color:#d13a30;">Disconnected</span></strong></p>
     </div>
 
-    <div class="dropdownContainer" id="protocol">
+    <div class="outerDropdownContainer">
+
+      <div class="dropdownContainer" id="protocol">
+        <form>
+          <label for="protocol">Protocol<br></label>
+          <select name="protocol" class="protocolSelector" onchange="updateFields(event, 'protocol')">
+              <option value="1">WS2811</option>
+              <option value="0">WS2812x</option>
+          </select>
+        </form>
+      </div>
+
+      <div class="numLedsContainer" id="numLeds">
+        <form>
+          <label for="numLeds"># LEDs<br></label>
+          <select name="numLeds" class="numLedsSelector" onchange="updateFields(event, 'numLeds')">
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="150">150</option>
+          </select>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="tile">
+    <div class="modeContainer">
+      <p class="title">Mode</p>
       <form>
-        <label for="protocol">Protocol</label>
-        <select name="protocol" class="protocolSelector" onchange="updateFields(event, 'protocol')">
-            <option value="1">WS2811</option>
-            <option value="0">WS2812x</option>
+        <select name="mode" class="modeSelector" onchange="updateFields(event, 'mode')">
+            <option value="0">Classic</option>
+            <option value="1">Waves</option>
         </select>
       </form>
     </div>
-
   </div>
 
   <div class="tile" style="height: 40%;">

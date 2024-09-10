@@ -14,8 +14,10 @@ const primaryNoiseFloorCharacteristic = '0000000b-0000-1000-8000-00805f9b34fb';
 const protocolCharacteristic = '00000007-0000-1000-8000-00805f9b34fb';
 const updateFlagCharacteristic = '00000008-0000-1000-8000-00805f9b34fb';
 const firmwareVersionCharacteristic = '0000000a-0000-1000-8000-00805f9b34fb';
+const modeCharacteristic = '0000000c-0000-1000-8000-00805f9b34fb';
+const numLedsCharacteristic = '0000000d-0000-1000-8000-00805f9b34fb';
 
-const characteristicList = [primaryColorStartingCharacteristic, primaryColorEndingCharacteristic, primarySpeedCharacteristic, primarySensitivityCharacteristic, primaryNoiseFloorCharacteristic, secondaryColorStartingCharacteristic, secondaryColorEndingCharacteristic, secondarySpeedCharacteristic, protocolCharacteristic, updateFlagCharacteristic, firmwareVersionCharacteristic];
+const characteristicList = [primaryColorStartingCharacteristic, primaryColorEndingCharacteristic, primarySpeedCharacteristic, primarySensitivityCharacteristic, primaryNoiseFloorCharacteristic, secondaryColorStartingCharacteristic, secondaryColorEndingCharacteristic, secondarySpeedCharacteristic, protocolCharacteristic, updateFlagCharacteristic, modeCharacteristic, numLedsCharacteristic, firmwareVersionCharacteristic];
 var _characteristics = [];
 
 // Global variables
@@ -236,6 +238,14 @@ function updateFields(event, param) {
         let protocol = source.querySelector('select.protocolSelector').value
         writeOnCharacteristic(protocolCharacteristic, protocol);
     }
+    else if (param == "mode") {
+        let mode = source.querySelector('select.modeSelector').value
+        writeOnCharacteristic(modeCharacteristic, mode);
+    }
+    else if (param == "numLeds") {
+        let numLeds = source.querySelector('select.numLedsSelector').value
+        writeOnCharacteristic(numLedsCharacteristic, numLeds);
+    }
     else if (param == "primary") {
         // If it's the primary form, we need color, speed, sensitity, and noise floor data.
         let startingColor = source.querySelector('input[name="starting"').value
@@ -268,6 +278,7 @@ function updateFields(event, param) {
         writeArrayOnCharacteristic(secondaryColorEndingCharacteristic, endingColorTranslated);
         writeOnCharacteristic(secondarySpeedCharacteristic, speed);
     }
+
 
     // Update flag
     writeOnCharacteristic(updateFlagCharacteristic, 1);
