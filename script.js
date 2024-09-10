@@ -10,11 +10,12 @@ const secondaryColorEndingCharacteristic = '00000005-0000-1000-8000-00805f9b34fb
 const primarySpeedCharacteristic = '00000003-0000-1000-8000-00805f9b34fb';
 const secondarySpeedCharacteristic = '00000006-0000-1000-8000-00805f9b34fb';
 const primarySensitivityCharacteristic = '00000009-0000-1000-8000-00805f9b34fb';
+const primaryNoiseFloorCharacteristic = '0000000b-0000-1000-8000-00805f9b34fb';
 const protocolCharacteristic = '00000007-0000-1000-8000-00805f9b34fb';
 const updateFlagCharacteristic = '00000008-0000-1000-8000-00805f9b34fb';
 const firmwareVersionCharacteristic = '0000000a-0000-1000-8000-00805f9b34fb';
 
-const characteristicList = [primaryColorStartingCharacteristic, primaryColorEndingCharacteristic, primarySpeedCharacteristic, secondaryColorStartingCharacteristic, secondaryColorEndingCharacteristic, secondarySpeedCharacteristic, protocolCharacteristic, updateFlagCharacteristic, firmwareVersionCharacteristic];
+const characteristicList = [primaryColorStartingCharacteristic, primaryColorEndingCharacteristic, primarySpeedCharacteristic, primarySensitivityCharacteristic, primaryNoiseFloorCharacteristic, secondaryColorStartingCharacteristic, secondaryColorEndingCharacteristic, secondarySpeedCharacteristic, protocolCharacteristic, updateFlagCharacteristic, firmwareVersionCharacteristic];
 var _characteristics = [];
 
 // Global variables
@@ -23,11 +24,13 @@ var bleServiceFound;
 var characteristicFound;
 var connectButton;
 var disconnectButton;
+var firmwareField;
 
 // Attach event handlers once page is loaded
 window.onload = function() {
     connectButton = document.getElementById('connectBleButton');
     disconnectButton = document.getElementById('disconnectBleButton');
+    firmwareField = document.getElementById('firmwareVersion');
 
     connectButton.addEventListener('click', (event) => {
         if (isWebBluetoothEnabled()) {
@@ -81,21 +84,22 @@ function connectToDevice() {
         return _characteristics;
     })
     .then(_characteristics => {
+        var characteristic;
         for (let i = 0; i < _characteristics.length; i++) {
-            var characteristic = _characteristics[i];
+            characteristic = _characteristics[i];
             console.log("Characteristic discovered:", characteristic.uuid);
             characteristicFound = characteristic;
             characteristic.addEventListener('characteristicvaluechanged', handleCharacteristicChange);
             characteristic.startNotifications();
             console.log("Notifications Started.");
         }
+        return characteristic;
     })
-    // // .then(value => {
-    //     console.log("Read value: ", value);
-    //     const decodedValue = new TextDecoder().decode(value);
-    //     console.log("Decoded value: ", decodedValue);
-    //     retrievedValue.innerHTML = decodedValue;
-    // })
+    .then(async _characteristic => {
+        _value = await _characteristic.readValue();
+        const decodedValue = new TextDecoder().decode(_value);
+        firmwareField.innerHTML = "Firmware Build " + decodedValue;
+    })
     .catch(error => {
         console.log('Error: ', error);
     })
@@ -110,10 +114,10 @@ function onDisconnected(event){
 }
 
 function handleCharacteristicChange(event){
-    const newValueReceived = new TextDecoder().decode(event.target.value);
-    console.log("Characteristic value changed: ", newValueReceived);
-    retrievedValue.innerHTML = newValueReceived;
-    timestampContainer.innerHTML = getDateTime();
+    // const newValueReceived = new TextDecoder().decode(event.target.value);
+    // console.log("Characteristic value changed: ", newValueReceived);
+    // retrievedValue.innerHTML = newValueReceived;
+    // timestampContainer.innerHTML = getDateTime();
 }
 
 function disconnectDevice() {
@@ -233,11 +237,12 @@ function updateFields(event, param) {
         writeOnCharacteristic(protocolCharacteristic, protocol);
     }
     else if (param == "primary") {
-        // If it's the primary form, we need color, speed, and sensitity data.
+        // If it's the primary form, we need color, speed, sensitity, and noise floor data.
         let startingColor = source.querySelector('input[name="starting"').value
         let endingColor = source.querySelector('input[name="ending"').value
         let speed = source.querySelector('input.speedSelector').value
         let sensitivity = source.querySelector('input.sensitivitySelector').value
+        let noiseFloor = source.querySelector('input.noiseFloorSelector').value;
 
         // Translate color values
         let startingColorTranslated = hexToByteArray(startingColor);
@@ -247,6 +252,7 @@ function updateFields(event, param) {
         writeArrayOnCharacteristic(primaryColorEndingCharacteristic, endingColorTranslated);
         writeOnCharacteristic(primarySpeedCharacteristic, speed);
         writeOnCharacteristic(primarySensitivityCharacteristic, sensitivity);
+        writeOnCharacteristic(primaryNoiseFloorCharacteristic, noiseFloor);
     }
     else if (param == "secondary") {
         // If it's the secondary form, we need color and speed data.

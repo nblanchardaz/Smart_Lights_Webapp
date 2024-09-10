@@ -8,6 +8,11 @@
 <body style="background-image: url('stars.gif');">
 
   <div class="tile">
+
+    <div class="firmwareContainer" id="firmware">
+      <p><span id="firmwareVersion">Connect to see firmware version</span></p>
+    </div>
+
     <div class="connection">
       <button id="connectBleButton">Connect</button>
       <button id="disconnectBleButton">Disconnect</button>
@@ -50,6 +55,11 @@
         <p class="subtitle">Sensitivity</p>
         <div class="speedSelectorBox">
           <input type="range" class="sensitivitySelector" min="1" max="100" value="50">
+        </div>
+
+        <p class="subtitle">Noise Floor</p>
+        <div class="speedSelectorBox">
+          <input type="range" class="noiseFloorSelector" min="1" max="100" value="50">
         </div>
 
         <p><input type="submit" value="Submit" class="submit"></p>
