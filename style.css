@@ -167,3 +167,8 @@ p {
     min-width: 640px;
     max-width: 1000px;
 }
+
+body {
+    vertical-align: auto;
+    margin: auto;
+}
