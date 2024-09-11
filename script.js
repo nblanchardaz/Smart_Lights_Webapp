@@ -101,6 +101,9 @@ function connectToDevice() {
         _value = await _characteristic.readValue();
         const decodedValue = new TextDecoder().decode(_value);
         firmwareField.innerHTML = "Firmware Build " + decodedValue;
+
+        // Update the rest of the page as well
+        updatePage();
     })
     .catch(error => {
         console.log('Error: ', error);
@@ -285,4 +288,40 @@ function updateFields(event, param) {
 
     // Prevent form from being cleared
     event.preventDefault();
+}
+
+async function updatePage() {
+
+    let source = document.getElementById("primary");
+    let primaryStartingColor = source.querySelector('input[name="starting"');
+    let primaryEndingColor = source.querySelector('input[name="ending"');
+    let primarySpeed = source.querySelector('input.speedSelector');
+    let primarySensitivity = source.querySelector('input.sensitivitySelector');
+    let primaryNoiseFloor = source.querySelector('input.noiseFloorSelector');
+
+    source = document.getElementById("secondary");
+    let secondaryStartingColor = source.querySelector('input[name="starting"');
+    let secondaryEndingColor = source.querySelector('input[name="ending"');
+    let secondarySpeed = source.querySelector('input.speedSelector');
+    
+    source = document.getElementById("numLeds");
+    let numLeds = source.querySelector('select.numLedsSelector');
+
+    source = document.getElementById("protocol");
+    let protocol = source.querySelector('select.protocolSelector');
+
+    // Primary starting color
+    let _primaryStartingColor = await _characteristics[0].readValue();
+    let decodedValue = new TextDecoder().decode(_primaryStartingColor);
+    // 
+    
+    // Primary ending color
+    let _primaryEndingColor = await _characteristics[1].readValue();
+    decodedValue = new TextDecoder().decode(_primaryEndingColor);
+    // 
+
+    // Primary speed
+    let _primarySpeed = await _characteristics[2].readValue();
+    primarySpeed.value = _primarySpeed.getUint8();
+
 }
