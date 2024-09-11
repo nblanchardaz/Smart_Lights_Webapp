@@ -303,6 +303,9 @@ async function updatePage() {
     let secondaryStartingColor = source.querySelector('input[name="starting"');
     let secondaryEndingColor = source.querySelector('input[name="ending"');
     let secondarySpeed = source.querySelector('input.speedSelector');
+
+    source = document.getElementById("mode");
+    let mode = source.querySelector('select.modeSelector');
     
     source = document.getElementById("numLeds");
     let numLeds = source.querySelector('select.numLedsSelector');
@@ -312,16 +315,70 @@ async function updatePage() {
 
     // Primary starting color
     let _primaryStartingColor = await _characteristics[0].readValue();
-    let decodedValue = new TextDecoder().decode(_primaryStartingColor);
-    // 
-    
+    let tempString = (_primaryStartingColor.getUint32()).toString(16);
+    primaryStartingColor.value = '#' + pad('000000', tempString, true);
+
     // Primary ending color
     let _primaryEndingColor = await _characteristics[1].readValue();
-    decodedValue = new TextDecoder().decode(_primaryEndingColor);
-    // 
+    tempString = (_primaryEndingColor.getUint32()).toString(16);
+    primaryEndingColor.value = '#' + pad('000000', tempString, true);
 
     // Primary speed
     let _primarySpeed = await _characteristics[2].readValue();
     primarySpeed.value = _primarySpeed.getUint8();
 
+    // Primary sensitivity
+    let _primarySensitivity = await _characteristics[3].readValue();
+    primarySensitivity.value = _primarySensitivity.getUint8();
+
+    // Primary noise floor
+    let _primaryNoiseFloor = await _characteristics[4].readValue();
+    primaryNoiseFloor.value = _primaryNoiseFloor.getUint8();
+
+    // Secondary starting color
+    let _secondaryStartingColor = await _characteristics[5].readValue();
+    tempString = (_secondaryStartingColor.getUint32()).toString(16);
+    secondaryStartingColor.value = '#' + pad('000000', tempString, true);
+
+    // Secondary ending color
+    let _secondaryEndingColor = await _characteristics[6].readValue();
+    tempString = (_secondaryEndingColor.getUint32()).toString(16);
+    secondaryEndingColor.value = '#' + pad('000000', tempString, true);
+
+    // Secondary speed
+    let _secondarySpeed = await _characteristics[7].readValue();
+    secondarySpeed.value = _secondarySpeed.getUint8();
+
+    // Protocol
+    let _protocol = await _characteristics[8].readValue();
+    decodedValue = new TextDecoder().decode(_protocol);
+    if (decodedValue == "NeoEsp32Rmt0Ws2811Method") {
+        protocol.value = 1;
+    }
+    else if (decodedValue == "NeoEsp32Rmt0Ws2812xMethod") {
+        protocol.value = 0;
+    }
+    else {
+        protocol.value = decodedValue;
+    }
+
+
+    // Mode
+    let _mode = await _characteristics[10].readValue();
+    mode.value = _mode.getUint8();
+
+    // Num LEDs
+    let _numLeds = await _characteristics[11].readValue();
+    numLeds.value = _numLeds.getUint8();
+
 }
+
+function pad(pad, str, padLeft) {
+    if (typeof str === 'undefined') 
+      return pad;
+    if (padLeft) {
+      return (pad + str).slice(-pad.length);
+    } else {
+      return (str + pad).substring(0, pad.length);
+    }
+  }
