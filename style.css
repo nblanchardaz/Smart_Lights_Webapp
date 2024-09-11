@@ -168,7 +168,16 @@ p {
     max-width: 1000px;
 }
 
-body {
-    vertical-align: middle;
-    margin: auto;
+/* .bodyWrapper {
+    margin: 10px;
+    height: 100%;
+    height: auto;
 }
+
+.container {
+    position: absolute;
+    top: 56%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+} */

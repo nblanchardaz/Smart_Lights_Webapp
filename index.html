@@ -7,121 +7,124 @@
 
 </head>
 <body style="background-image: url('stars.gif');">
+  <div class="bodyWrapper">
+    <div class="container">
 
-  <div class="tile">
+      <div class="tile">
 
-    <div class="firmwareContainer" id="firmware">
-      <p><span id="firmwareVersion">Connect to see firmware version</span></p>
-    </div>
+        <div class="firmwareContainer" id="firmware">
+          <p><span id="firmwareVersion">Connect to see firmware version</span></p>
+        </div>
 
-    <div class="connection">
-      <button id="connectBleButton">Connect</button>
-      <button id="disconnectBleButton">Disconnect</button>
-      <p>BLE: <strong><span id="bleStateContainer" style="color:#d13a30;">Disconnected</span></strong></p>
-    </div>
+        <div class="connection">
+          <button id="connectBleButton">Connect</button>
+          <button id="disconnectBleButton">Disconnect</button>
+          <p>BLE: <strong><span id="bleStateContainer" style="color:#d13a30;">Disconnected</span></strong></p>
+        </div>
 
-    <div class="outerDropdownContainer">
+        <div class="outerDropdownContainer">
 
-      <div class="dropdownContainer" id="protocol">
-        <form>
-          <label for="protocol">Protocol<br></label>
-          <select name="protocol" class="protocolSelector" onchange="updateFields(event, 'protocol')">
-              <option value="1">WS2811</option>
-              <option value="0">WS2812x</option>
-          </select>
-        </form>
+          <div class="dropdownContainer" id="protocol">
+            <form>
+              <label for="protocolid">Protocol<br></label>
+              <select id="protocolid" name="protocol" class="protocolSelector" onchange="updateFields(event, 'protocol')">
+                  <option value="1">WS2811</option>
+                  <option value="0">WS2812x</option>
+              </select>
+            </form>
+          </div>
+
+          <div class="numLedsContainer" id="numLeds">
+            <form>
+              <label for="numLedsid"># LEDs<br></label>
+              <select id="numLedsid" name="numLeds" class="numLedsSelector" onchange="updateFields(event, 'numLeds')">
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="150">150</option>
+              </select>
+            </form>
+          </div>
+
+        </div>
+
       </div>
 
-      <div class="numLedsContainer" id="numLeds">
-        <form>
-          <label for="numLeds"># LEDs<br></label>
-          <select name="numLeds" class="numLedsSelector" onchange="updateFields(event, 'numLeds')">
-              <option value="50">50</option>
-              <option value="100">100</option>
-              <option value="150">150</option>
-          </select>
-        </form>
+      <div class="tile">
+        <div class="modeContainer" id="mode">
+          <p class="title">Mode</p>
+          <form>
+            <select name="mode" class="modeSelector" onchange="updateFields(event, 'mode')">
+                <option value="0">Classic</option>
+                <option value="1">Waves</option>
+            </select>
+          </form>
+        </div>
       </div>
 
-    </div>
+      <div class="tile">
+        <div class="selectionBox" id="primary">
 
-  </div>
+          <p class="title">Primary</p>
+          <form onSubmit="updateFields(event, 'primary')">
 
-  <div class="tile">
-    <div class="modeContainer" id="mode">
-      <p class="title">Mode</p>
-      <form>
-        <select name="mode" class="modeSelector" onchange="updateFields(event, 'mode')">
-            <option value="0">Classic</option>
-            <option value="1">Waves</option>
-        </select>
-      </form>
-    </div>
-  </div>
+            <div class="colorSelectorLeft">
+              <label for="startingid">Starting Color</label>
+              <input id="startingid" type="color" class="colorSelector" name="starting" value="#ff0000">
+            </div>
 
-  <div class="tile" style="height: 40%;">
-    <div class="selectionBox" id="primary">
+            <div class="colorSelectorRight">
+              <label for="endingid">Ending Color</label>
+              <input id="endingid" type="color" class="colorSelector" name="ending" value="#ff0000">
+            </div>
 
-      <p class="title">Primary</p>
-      <form onSubmit="updateFields(event, 'primary')">
+            <p class="subtitle">Speed</p>
+            <div class="speedSelectorBox">
+              <input type="range" class="speedSelector" min="1" max="100" value="50">
+            </div>
 
-        <div class="colorSelectorLeft">
-          <label for="starting">Starting Color</label>
-          <input type="color" class="colorSelector" name="starting" value="#ff0000">
+            <p class="subtitle">Sensitivity</p>
+            <div class="speedSelectorBox">
+              <input type="range" class="sensitivitySelector" min="1" max="100" value="50">
+            </div>
+
+            <p class="subtitle">Noise Floor</p>
+            <div class="speedSelectorBox">
+              <input type="range" class="noiseFloorSelector" min="1" max="100" value="50">
+            </div>
+
+            <p><input type="submit" value="Submit" class="submit"></p>
+
+          </form>
         </div>
+      </div>
 
-        <div class="colorSelectorRight">
-          <label for="ending">Ending Color</label>
-          <input type="color" class="colorSelector" name="ending" value="#ff0000">
+      <div class="tile">
+        <div class="selectionBox" id="secondary">
+
+          <p class="title">Secondary</p>
+          <form onSubmit="updateFields(event, 'secondary')">
+
+            <div class="colorSelectorLeft">
+              <label for="startingid2">Starting Color</label>
+              <input id="startingid2" type="color" class="colorSelector" name="starting" value="#ff0000">
+            </div>
+
+            <div class="colorSelectorRight">
+              <label for="endingid2">Ending Color</label>
+              <input id="endingid2" type="color" class="colorSelector" name="ending" value="#ff0000">
+            </div>
+
+            <p class="subtitle">Speed</p>
+            <div class="speedSelectorBox">
+              <input type="range" class="speedSelector" min="1" max="100" value="50">
+            </div>
+
+            <p><input type="submit" value="Submit" class="submit"></p>
+
+          </form>
         </div>
-
-        <p class="subtitle">Speed</p>
-        <div class="speedSelectorBox">
-          <input type="range" class="speedSelector" min="1" max="100" value="50">
-        </div>
-
-        <p class="subtitle">Sensitivity</p>
-        <div class="speedSelectorBox">
-          <input type="range" class="sensitivitySelector" min="1" max="100" value="50">
-        </div>
-
-        <p class="subtitle">Noise Floor</p>
-        <div class="speedSelectorBox">
-          <input type="range" class="noiseFloorSelector" min="1" max="100" value="50">
-        </div>
-
-        <p><input type="submit" value="Submit" class="submit"></p>
-
-      </form>
-    </div>
-  </div>
-
-  <div class="tile" style="height: 40%;">
-    <div class="selectionBox" id="secondary">
-
-      <p class="title">Secondary</p>
-      <form onSubmit="updateFields(event, 'secondary')">
-
-        <div class="colorSelectorLeft">
-          <label for="starting">Starting Color</label>
-          <input type="color" class="colorSelector" name="starting" value="#ff0000">
-        </div>
-
-        <div class="colorSelectorRight">
-          <label for="ending">Ending Color</label>
-          <input type="color" class="colorSelector" name="ending" value="#ff0000">
-        </div>
-
-        <p class="subtitle">Speed</p>
-        <div class="speedSelectorBox">
-          <input type="range" class="speedSelector" min="1" max="100" value="50">
-        </div>
-
-        <p><input type="submit" value="Submit" class="submit"></p>
-
-      </form>
+      </div>
     </div>
   </div>
-
 </body>
 </html>
