@@ -25,29 +25,10 @@
     margin-bottom: 20px;
 }
 
-.speedSelector {
+.speedSelector, .sensitivitySelector, .noiseFloorSelector, .waveSpeedSelector, .wavePeriodSelector {
     width: 50%;
     margin: auto;
-}
-
-.sensitivitySelector {
-    width: 50%;
-    margin: auto;
-}
-
-.noiseFloorSelector {
-    width: 50%;
-    margin: auto;
-}
-
-.waveSpeedSelector {
-    width: 50%;
-    margin: auto;
-}
-
-.wavePeriodSelector {
-    width: 50%;
-    margin: auto;
+    height: 75px;
 }
 
 .subtitle {
