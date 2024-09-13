@@ -46,7 +46,7 @@
 
 .subtitle {
     color: white;
-    margin: 25px;
+    margin: 30px;
 }
 
 .speedSelectorBox {
@@ -55,8 +55,8 @@
 
 .submit {
     margin: auto;
-    font-size: 20px;
-    margin-top: 20px;
+    font-size: 30px;
+    margin-top: 30px;
 }
 
 p {
@@ -94,7 +94,7 @@ p {
     margin-bottom: 20px;
     margin-left: 10px;
     margin-right: 10px;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .connection p {
@@ -134,7 +134,7 @@ p {
     width: 30%;
     margin: auto;
     float: left;
-    font-size: 15px;
+    font-size: 25px;
     color: white;
     text-align: center;
 }
@@ -150,15 +150,15 @@ p {
 }
 
 .dropdownContainer select {
-    font-size: 18px;
+    font-size: 22px;
 }
 
 .numLedsContainer select {
-    font-size: 18px;
+    font-size: 22px;
 }
 
 .modeContainer select {
-    font-size: 18px;
+    font-size: 30px;
     margin-bottom: 20px;
 }
 
@@ -169,7 +169,7 @@ p {
     margin-top: 10px;
     padding-left: 10px;
     padding-right: 10px;
-    min-width: 640px;
+    min-width: 800px;
     max-width: 1000px;
 }
 
