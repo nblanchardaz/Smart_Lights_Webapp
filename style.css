@@ -40,6 +40,16 @@
     margin: auto;
 }
 
+.waveSpeedSelector {
+    width: 50%;
+    margin: auto;
+}
+
+.wavePeriodSelector {
+    width: 50%;
+    margin: auto;
+}
+
 .subtitle {
     color: white;
     margin: 15px;

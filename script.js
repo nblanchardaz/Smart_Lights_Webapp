@@ -11,13 +11,15 @@ const primarySpeedCharacteristic = '00000003-0000-1000-8000-00805f9b34fb';
 const secondarySpeedCharacteristic = '00000006-0000-1000-8000-00805f9b34fb';
 const primarySensitivityCharacteristic = '00000009-0000-1000-8000-00805f9b34fb';
 const primaryNoiseFloorCharacteristic = '0000000b-0000-1000-8000-00805f9b34fb';
+const primaryWaveSpeedCharacteristic = '0000000e-0000-1000-8000-00805f9b34fb';
+const primaryWavePeriodCharacteristic = '0000000f-0000-1000-8000-00805f9b34fb';
 const protocolCharacteristic = '00000007-0000-1000-8000-00805f9b34fb';
 const updateFlagCharacteristic = '00000008-0000-1000-8000-00805f9b34fb';
 const firmwareVersionCharacteristic = '0000000a-0000-1000-8000-00805f9b34fb';
 const modeCharacteristic = '0000000c-0000-1000-8000-00805f9b34fb';
 const numLedsCharacteristic = '0000000d-0000-1000-8000-00805f9b34fb';
 
-const characteristicList = [primaryColorStartingCharacteristic, primaryColorEndingCharacteristic, primarySpeedCharacteristic, primarySensitivityCharacteristic, primaryNoiseFloorCharacteristic, secondaryColorStartingCharacteristic, secondaryColorEndingCharacteristic, secondarySpeedCharacteristic, protocolCharacteristic, updateFlagCharacteristic, modeCharacteristic, numLedsCharacteristic, firmwareVersionCharacteristic];
+const characteristicList = [primaryColorStartingCharacteristic, primaryColorEndingCharacteristic, primarySpeedCharacteristic, primarySensitivityCharacteristic, primaryNoiseFloorCharacteristic, secondaryColorStartingCharacteristic, secondaryColorEndingCharacteristic, secondarySpeedCharacteristic, protocolCharacteristic, updateFlagCharacteristic, modeCharacteristic, numLedsCharacteristic, primaryWaveSpeedCharacteristic, primaryWavePeriodCharacteristic, firmwareVersionCharacteristic];
 var _characteristics = [];
 
 // Global variables
@@ -58,7 +60,7 @@ function connectToDevice() {
     console.log('Initializing Bluetooth...');
     navigator.bluetooth.requestDevice({
         filters: [{name: deviceName}],
-        // optionalServices: [bleService]
+        optionalServices: [bleService]
         // acceptAllDevices: true,
         // optionalServices: [bleService]
     })
@@ -250,12 +252,14 @@ function updateFields(event, param) {
         writeOnCharacteristic(numLedsCharacteristic, numLeds);
     }
     else if (param == "primary") {
-        // If it's the primary form, we need color, speed, sensitity, and noise floor data.
+        // If it's the primary form, we need color, speed, sensitity, noise floor, wave speed, and wave period data.
         let startingColor = source.querySelector('input[name="starting"').value
         let endingColor = source.querySelector('input[name="ending"').value
         let speed = source.querySelector('input.speedSelector').value
         let sensitivity = source.querySelector('input.sensitivitySelector').value
         let noiseFloor = source.querySelector('input.noiseFloorSelector').value;
+        let waveSpeed = source.querySelector('input.waveSpeedSelector').value;
+        let wavePeriod = source.querySelector('input.wavePeriodSelector').value;
 
         // Translate color values
         let startingColorTranslated = hexToByteArray(startingColor);
@@ -266,6 +270,9 @@ function updateFields(event, param) {
         writeOnCharacteristic(primarySpeedCharacteristic, speed);
         writeOnCharacteristic(primarySensitivityCharacteristic, sensitivity);
         writeOnCharacteristic(primaryNoiseFloorCharacteristic, noiseFloor);
+        writeOnCharacteristic(primaryWaveSpeedCharacteristic, waveSpeed);
+        writeOnCharacteristic(primaryWavePeriodCharacteristic, wavePeriod);
+
     }
     else if (param == "secondary") {
         // If it's the secondary form, we need color and speed data.
@@ -282,7 +289,6 @@ function updateFields(event, param) {
         writeOnCharacteristic(secondarySpeedCharacteristic, speed);
     }
 
-
     // Update flag
     writeOnCharacteristic(updateFlagCharacteristic, 1);
 
@@ -298,6 +304,9 @@ async function updatePage() {
     let primarySpeed = source.querySelector('input.speedSelector');
     let primarySensitivity = source.querySelector('input.sensitivitySelector');
     let primaryNoiseFloor = source.querySelector('input.noiseFloorSelector');
+    let primaryWaveSpeed = source.querySelector('input.waveSpeedSelector');
+    let primaryWavePeriod = source.querySelector('input.wavePeriodSelector');
+
 
     source = document.getElementById("secondary");
     let secondaryStartingColor = source.querySelector('input[name="starting"');
@@ -335,6 +344,14 @@ async function updatePage() {
     let _primaryNoiseFloor = await _characteristics[4].readValue();
     primaryNoiseFloor.value = _primaryNoiseFloor.getUint8();
 
+    // Primary wave speed
+    let _primaryWaveSpeed = await _characteristics[12].readValue();
+    primaryWaveSpeed.value = _primaryWaveSpeed.getUint8();
+
+    // Primary wave period
+    let _primaryWavePeriod = await _characteristics[13].readValue();
+    primaryWavePeriod.value = _primaryWavePeriod.getUint8();
+
     // Secondary starting color
     let _secondaryStartingColor = await _characteristics[5].readValue();
     tempString = (_secondaryStartingColor.getUint32()).toString(16);
@@ -351,17 +368,7 @@ async function updatePage() {
 
     // Protocol
     let _protocol = await _characteristics[8].readValue();
-    decodedValue = new TextDecoder().decode(_protocol);
-    if (decodedValue == "NeoEsp32Rmt0Ws2811Method") {
-        protocol.value = 1;
-    }
-    else if (decodedValue == "NeoEsp32Rmt0Ws2812xMethod") {
-        protocol.value = 0;
-    }
-    else {
-        protocol.value = decodedValue;
-    }
-
+    protocol.value = _protocol.getUint8();
 
     // Mode
     let _mode = await _characteristics[10].readValue();
@@ -374,6 +381,13 @@ async function updatePage() {
 }
 
 function pad(pad, str, padLeft) {
+
+    // Start by making sure the string is 6 or less characters
+    if (str.length > 6) {
+        str = str.slice(0, 6);
+    }
+
+    // Code from stack overflow:
     if (typeof str === 'undefined') 
       return pad;
     if (padLeft) {
