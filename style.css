@@ -26,14 +26,27 @@
 }
 
 .speedSelector, .sensitivitySelector, .noiseFloorSelector, .waveSpeedSelector, .wavePeriodSelector {
-    width: 50%;
+    -webkit-appearance: none;
+    width: 75%;
     margin: auto;
-    height: 75px;
+    height: 10px;
+
+    -webkit-transition: .2s;
+    transition: opacity .2s;
 }
+
+.speedSelector::-webkit-slider-thumb, .sensitivitySelector::-webkit-slider-thumb, .noiseFloorSelector::-webkit-slider-thumb, .waveSpeedSelector::-webkit-slider-thumb, .wavePeriodSelector::-webkit-slider-thumb { 
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 60px;
+    background: #175fe4;
+    cursor: pointer;
+} 
 
 .subtitle {
     color: white;
-    margin: 15px;
+    margin: 25px;
 }
 
 .speedSelectorBox {
@@ -43,6 +56,7 @@
 .submit {
     margin: auto;
     font-size: 20px;
+    margin-top: 20px;
 }
 
 p {
