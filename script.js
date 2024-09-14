@@ -60,7 +60,7 @@ function connectToDevice() {
     console.log('Initializing Bluetooth...');
     navigator.bluetooth.requestDevice({
         filters: [{name: deviceName}],
-        // optionalServices: [bleService]
+        optionalServices: [bleService]
         // acceptAllDevices: true,
         // optionalServices: [bleService]
     })
@@ -325,12 +325,12 @@ async function updatePage() {
     // Primary starting color
     let _primaryStartingColor = await _characteristics[0].readValue();
     let tempString = (_primaryStartingColor.getUint32()).toString(16);
-    primaryStartingColor.value = '#' + pad('000000', tempString, true);
+    primaryStartingColor.value = '#' + pad('00000000', tempString, true);
 
     // Primary ending color
     let _primaryEndingColor = await _characteristics[1].readValue();
     tempString = (_primaryEndingColor.getUint32()).toString(16);
-    primaryEndingColor.value = '#' + pad('000000', tempString, true);
+    primaryEndingColor.value = '#' + pad('00000000', tempString, true);
 
     // Primary speed
     let _primarySpeed = await _characteristics[2].readValue();
@@ -355,12 +355,12 @@ async function updatePage() {
     // Secondary starting color
     let _secondaryStartingColor = await _characteristics[5].readValue();
     tempString = (_secondaryStartingColor.getUint32()).toString(16);
-    secondaryStartingColor.value = '#' + pad('000000', tempString, true);
+    secondaryStartingColor.value = '#' + pad('00000000', tempString, true);
 
     // Secondary ending color
     let _secondaryEndingColor = await _characteristics[6].readValue();
     tempString = (_secondaryEndingColor.getUint32()).toString(16);
-    secondaryEndingColor.value = '#' + pad('000000', tempString, true);
+    secondaryEndingColor.value = '#' + pad('00000000', tempString, true);
 
     // Secondary speed
     let _secondarySpeed = await _characteristics[7].readValue();
@@ -382,17 +382,14 @@ async function updatePage() {
 
 function pad(pad, str, padLeft) {
 
-    // Start by making sure the string is 6 or less characters
-    if (str.length > 6) {
-        str = str.slice(0, 6);
+    // Make sure the string is 8 characters
+    // (we sent 4 whole bytes, so we need to ensure we received 4 whole bytes)
+    // (sometimes leading 0x00 will be ignored)
+    var newStr;
+    if (String.length < 8) {
+        newStr = ("00000000" + str).slice(-pad.length);
     }
 
-    // Code from stack overflow:
-    if (typeof str === 'undefined') 
-      return pad;
-    if (padLeft) {
-      return (pad + str).slice(-pad.length);
-    } else {
-      return (str + pad).substring(0, pad.length);
-    }
+    // Make sure the string is 6 or less characters
+    return newStr.slice(0, 6);
   }
